@@ -197,7 +197,8 @@ int _dns_server_check_speed(struct dns_request *request, char *ip)
 	int port = 80;
 	int type = DOMAIN_CHECK_NONE;
 	int order = request->check_order;
-	int ping_timeout = DNS_PING_TIMEOUT;
+	// speed up check speed by setting a shorter timeout
+	int ping_timeout = 200;
 	unsigned long now = get_tick_count();
 
 	if (order >= DOMAIN_CHECK_NUM || request->check_order_list == NULL) {
@@ -208,12 +209,6 @@ int _dns_server_check_speed(struct dns_request *request, char *ip)
 		return -1;
 	}
 
-	ping_timeout = ping_timeout - (now - request->send_tick);
-	if (ping_timeout > DNS_PING_TIMEOUT) {
-		ping_timeout = DNS_PING_TIMEOUT;
-	} else if (ping_timeout < 200) {
-		ping_timeout = 200;
-	}
 
 	port = request->check_order_list->orders[order].tcp_port;
 	type = request->check_order_list->orders[order].type;
