@@ -70,8 +70,8 @@ STATIC = 1
 endif
 
 ifdef STATIC
- override CFLAGS += -DBUILD_STATIC
- override LDFLAGS += -lssl -lcrypto -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -ldl -lm -static -rdynamic
+ #override CFLAGS += -DBUILD_STATIC
+ override LDFLAGS += -Wl,--whole-archive -l:libssl.a -l:libcrypto.a -Wl,--no-whole-archive -lz -lpthread -ldl -lm -rdynamic
 else
  override LDFLAGS += -lssl -lcrypto -lpthread -ldl -lm -rdynamic
 endif
