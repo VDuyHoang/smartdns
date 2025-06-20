@@ -179,6 +179,10 @@ static int dns_server_resolve_callback(const char *domain, dns_result_type rtype
 		}
 
 		ret = _dns_server_process_answer(request, domain, packet, result_flag, &need_passthrouh);
+		if (ret != 0 && (strncmp(dns_client_get_server_ip(server_info), "8.",2)==0 || strncmp(dns_client_get_server_ip(server_info), "1.",2)==0)){
+			_dns_server_request_complete_with_all_IPs(request, 0);
++			return 0;
+		}
 		if (ret == 0 && need_passthrouh == 1 && atomic_read(&request->notified) == 0) {
 			/* not supported record, passthrouth */
 			request->passthrough = 1;
